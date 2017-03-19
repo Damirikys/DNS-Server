@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server.DNSServer.iml" filepath="$PROJECT_DIR$/.idea/modules/server.DNSServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server.DNSServer_main.iml" filepath="$PROJECT_DIR$/.idea/modules/server.DNSServer_main.iml" group="server.DNSServer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server.DNSServer_test.iml" filepath="$PROJECT_DIR$/.idea/modules/server.DNSServer_test.iml" group="server.DNSServer" />
+    </modules>
+  </component>
+</project>
