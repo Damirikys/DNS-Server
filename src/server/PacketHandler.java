@@ -5,6 +5,7 @@ import storage.IPDomainStorage;
 import utils.IPValidator;
 
 import java.net.DatagramPacket;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class PacketHandler implements PacketReceiver.Callback
@@ -12,6 +13,9 @@ public class PacketHandler implements PacketReceiver.Callback
     private static final int DOMAIN_START_INDEX = 12;
     private static final int IP_START_INDEX = 44;
     private static final int IP_END_INDEX = 47;
+
+    private static final int TTL_START_INDEX = 38;
+    private static final int TTL_END_INDEX = 41;
 
     @Override
     public void onReceive(DatagramPacket data)
@@ -31,10 +35,11 @@ public class PacketHandler implements PacketReceiver.Callback
             {
                 System.out.println(Arrays.toString(packet));
                 String address = getIPFromDNSPacket(packet);
+                int ttl = getTTLFromDNSPacket(packet);
 
                 if (IPValidator.validate(address))
                 {
-                    IPDomainStorage.putEntry(domain, address, (int)(System.currentTimeMillis() / 1000) + 20);
+                    IPDomainStorage.putEntry(domain, address, ttl);
                     DNSProvider.sendResponsePacket(data, domain, address);
                 }
             });
@@ -74,5 +79,21 @@ public class PacketHandler implements PacketReceiver.Callback
         }
 
         return ipBuilder.toString();
+    }
+
+    private int getTTLFromDNSPacket(byte[] packet)
+    {
+        byte[] buffer = new byte[4];
+
+        int count = 0;
+        for (int i = TTL_START_INDEX; i <= TTL_END_INDEX; i++) {
+            buffer[count] = packet[i];
+            count++;
+        }
+
+        int seconds = ByteBuffer.wrap(buffer).getInt();
+        System.out.println("TTL: "+seconds);
+
+        return (int)(System.currentTimeMillis() / 1000) + seconds;
     }
 }
